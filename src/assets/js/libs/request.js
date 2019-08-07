@@ -3,4 +3,4 @@ function request(pUrl,pType='GET') {
 }
 export {
     request
-}
+};
