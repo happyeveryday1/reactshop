@@ -8,13 +8,15 @@ export default class IndexComponent extends React.Component{
     constructor(){
         super();
         this.state={
-            aSwiper:[]
+            aSwiper:[],
+            aNav:[]
 
         }
     }
     componentDidMount() {
 
         this.getSwiper();
+        this.getNav();
 
     }
     getSwiper(){
@@ -31,14 +33,15 @@ export default class IndexComponent extends React.Component{
                 });
             }
         })
-        /*console.log(config);
-        request(config.baseUrl+"/api/home/index/slide?token="+config.token).then(res=>{
+    }
+    getNav(){
+        request(config.baseUrl+"/api/home/index/nav?token="+config.token).then(res=>{
+            console.log(res);
             if (res.code===200){
-                this.setState({aSwiper:res.data},()=>{
-
-                });
+                this.setState({aNav:res.data})
             }
-        })*/
+        })
+
     }
 
     render() {
@@ -69,7 +72,7 @@ export default class IndexComponent extends React.Component{
                     <div className="swiper-pagination"></div>
                 </div>
                 <div className={Css['quick-nav']}>
-                    {/*{
+                    {
                         this.state.aNav!=null?
                         this.state.aNav.map((item,index)=>{
                             return(
@@ -81,7 +84,7 @@ export default class IndexComponent extends React.Component{
                                 </ul>
                             )
                         }):""
-                    }*/}
+                    }
                 </div>
                 <div className={Css['goods-level-wrap']}>
                     <div className={Css['classify-title']+" "+Css['color1']}>-- 潮流女装 --</div>
