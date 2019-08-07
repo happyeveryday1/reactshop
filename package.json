@@ -60,7 +60,8 @@
     "url-search-params-polyfill": "^7.0.0",
     "babel-plugin-react-html-attrs": "^2.1.0",
     "react-router-dom": "~5.0.1",
-    "babel-polyfill": "^6.26.0"
+    "babel-polyfill": "^6.26.0",
+    "whatwg-fetch": "^3.0.0"
   },
   "scripts": {
     "start": "node scripts/start.js",

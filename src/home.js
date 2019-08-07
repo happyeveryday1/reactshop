@@ -7,6 +7,8 @@ import "./assets/css/common/public.css"
 //import "./assets/js/libs/zepto"
 import 'babel-polyfill';
 import 'url-search-params-polyfill'
+import 'whatwg-fetch'
+
 
 ReactDOM.render(<RouterComponent />, document.getElementById('root'));
 
