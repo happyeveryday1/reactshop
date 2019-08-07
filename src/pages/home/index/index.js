@@ -59,7 +59,7 @@ export default class IndexComponent extends React.Component{
                         {
                             this.state.aSwiper.map((item,index)=>{
                                 return(
-                                    <div key={index} className="swiper-slide"><a href="http://www.baidu.com" target="_blank" ref="noopener noreferrer" ><img
+                                    <div key={index} className="swiper-slide"><a href={item.webs} target="_blank" ref="noopener noreferrer" ><img
                                         src={item.image} alt={item.title}/></a>
                                     </div>
                                 )
