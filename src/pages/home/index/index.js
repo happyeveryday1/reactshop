@@ -18,9 +18,9 @@ export default class IndexComponent extends React.Component{
 
     }
     getSwiper(){
-        console.log(config)
-        request(config.baseUrl+"/api/home/index/slide?token=1ec949a15fb709370f").then(res=>{
-            console.log(res)
+
+        request(config.baseUrl+"/api/home/index/slide?token="+config.token).then(res=>{
+
             if (res.code===200){
                 this.setState({aSwiper:res.data},()=>{
                     new Swiper("."+Css['swiper-wrap'], {
