@@ -84,7 +84,7 @@ module.exports = function(proxy, allowedHost) {
     //proxy,
     proxy:{
       "/proxy":{
-        "target":"vueshop.glbuys.com",
+        "target":"http://vueshop.glbuys.com",
         "changeOrigin":"true",
         "pathRewrite":{
           "^/proxy":""

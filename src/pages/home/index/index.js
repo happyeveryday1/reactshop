@@ -1,7 +1,7 @@
 import React from 'react';
 import Css from '../../../assets/css/home/index/index.css'
 import Swiper from '../../../assets/js/libs/swiper.min';
-//import config from '../../../assets/js/conf/config'
+import config from '../../../assets/js/conf/config'
 import {request} from '../../../assets/js/libs/request'
 import '../../../assets/css/common/swiper.min.css'
 export default class IndexComponent extends React.Component{
@@ -18,7 +18,8 @@ export default class IndexComponent extends React.Component{
 
     }
     getSwiper(){
-        request("http://vueshop.glbuys.com/api/home/index/slide?token=1ec949a15fb709370f").then(res=>{
+        console.log(config)
+        request(config.baseUrl+"/api/home/index/slide?token=1ec949a15fb709370f").then(res=>{
             console.log(res)
             if (res.code===200){
                 this.setState({aSwiper:res.data},()=>{
