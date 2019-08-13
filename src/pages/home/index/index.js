@@ -2,7 +2,8 @@ import React from 'react';
 import Css from '../../../assets/css/home/index/index.css'
 import Swiper from '../../../assets/js/libs/swiper.min';
 import config from '../../../assets/js/conf/config'
-import {request} from '../../../assets/js/libs/request'
+import {request} from '../../../assets/js/libs/request';
+import {lazyImg} from "../../../assets/js/utils/util";
 import '../../../assets/css/common/swiper.min.css'
 export default class IndexComponent extends React.Component{
     constructor(){
@@ -11,9 +12,11 @@ export default class IndexComponent extends React.Component{
             aSwiper:[],
             aNav:[],
             aGoods:[],
-            aRecoGoods:[]
+            aRecoGoods:[],
+            bScroll:false
 
         }
+        this.bScroll=true;
     }
     componentDidMount() {
 
@@ -21,6 +24,23 @@ export default class IndexComponent extends React.Component{
         this.getNav();
         this.getGoodsLevel();
         this.getReco();
+        window.addEventListener("scroll",this.eventScroll.bind(this),false)
+
+    }
+    componentWillUnmount() {
+        this.bScroll=false;
+        window.removeEventListener("scroll",this.eventScroll.bind(this))
+    }
+
+    eventScroll(){
+        if (this.bScroll){
+            let iScrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+            if (iScrollTop>=80){
+                this.setState({bScroll:true})
+            } else {
+                this.setState({bScroll:false})
+            }
+        }
 
     }
     getSwiper(){
@@ -49,8 +69,9 @@ export default class IndexComponent extends React.Component{
     getGoodsLevel(){
         request(config.baseUrl+"/api/home/index/goodsLevel?token="+config.token).then(res=>{
             if(res.code===200){
-                console.log(res)
-                this.setState({aGoods:res.data})
+                this.setState({aGoods:res.data},()=>{
+                    lazyImg()
+                })
             }
         })
     }
@@ -58,8 +79,9 @@ export default class IndexComponent extends React.Component{
     getReco(){
         request(config.baseUrl+"/api/home/index/recom?token="+config.token).then(res=>{
             if(res.code===200){
-                console.log(res)
-                this.setState({aRecoGoods:res.data})
+                this.setState({aRecoGoods:res.data},()=>{
+                    lazyImg()
+                })
             }
         })
     }
@@ -67,7 +89,7 @@ export default class IndexComponent extends React.Component{
     render() {
         return(
             <div className={Css['page']}>
-                <div className={Css['search-header']}>
+                <div className={this.state.bScroll?Css['search-header']+" "+Css['red-bg']:Css['search-header']}>
                     <div className={Css['classify-icon']}></div>
                     <div className={Css['search-wrap']}>
                         <div className={Css['search-icon']}></div>
@@ -83,7 +105,7 @@ export default class IndexComponent extends React.Component{
                             this.state.aSwiper.map((item,index)=>{
                                 return(
                                     <div key={index} className="swiper-slide"><a href={item.webs} target="_blank" ref="noopener noreferrer" ><img
-                                        src={item.image} alt={item.title}/></a>
+                                        src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title} data-echo={item.image}/></a>
                                     </div>
                                 )
                             })
@@ -98,7 +120,7 @@ export default class IndexComponent extends React.Component{
                             return(
                                 <ul key={index} className={Css['item']}>
                                     <li className={Css['item-img']}>
-                                        <img src={item.image} alt={item.title}/>
+                                        <img src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title} data-echo={item.image}/>
                                     </li>
                                     <li className={Css['item-text']}>{item.title}</li>
                                 </ul>
@@ -111,18 +133,18 @@ export default class IndexComponent extends React.Component{
                     this.state.aGoods.map((item,index)=>{
                         return(
                             <div key={index} className={Css['goods-level-wrap']}>
-                                <div className={Css['classify-title']+" "+Css['color'+(index+1)]}>-- {item.title} --</div>
+                                <div key={index} className={Css['classify-title']+" "+Css['color'+(index+1)]}>-- {item.title} --</div>
                                 {index%2===1?
 
                                     <div className={Css['goods-level1-wrap']}>
                                         {item.items!=null?
                                             item.items.slice(0,2).map((item2,index2)=>{
                                                 return (
-                                                    <div className={Css['goods-level1-item0']}>
+                                                    <div key={index2} className={Css['goods-level1-item0']}>
                                                         <div className={Css['goods-title2']}>{item2.title}</div>
                                                         <div className={Css['goods-text2']}>火爆开售</div>
                                                         <div className={Css['goods-img2']}>
-                                                            <img src={item2.image} alt=""/>
+                                                            <img src={require("../../../assets/images/common/lazyImg.jpg")} alt={item2.title} data-echo={item2.image}/>
                                                         </div>
                                                     </div>
                                                 )
@@ -135,7 +157,7 @@ export default class IndexComponent extends React.Component{
                                             <div className={Css['goods-text']}>精品打折</div>
                                             <div className={Css['goods-price'+(index+1)]}>{item.items!=null?item.items[0].price:""}元</div>
                                             <div className={Css['goods-img']}>
-                                                <img src={item.items!=null?item.items[0].image:""} alt={item.items!=null?item.items[0].title:""}/>
+                                                <img data-echo={item.items!=null?item.items[0].image:""} src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title} alt={item.items!=null?item.items[0].title:""}/>
                                             </div>
                                         </div>
                                         <div className={Css['goods-level1-item1']}>
@@ -147,19 +169,12 @@ export default class IndexComponent extends React.Component{
                                                                 <div className={Css['goods-row-title']}>{item2.title}</div>
                                                                 <div className={Css['goods-row-text']}>品质精挑</div>
                                                                 <div className={Css['goods-row-img']}>
-                                                                    <img src={item2.image} alt={item2.title}/></div>
+                                                                    <img src={require("../../../assets/images/common/lazyImg.jpg")} alt={item2.title} data-echo={item2.image}/></div>
                                                             </div>
                                                         )
                                                     })
                                                     :""
                                             }
-
-                                            <div className={Css['goods-row']}>
-                                                <div className={Css['goods-row-title']}>欧美尖头蝴蝶结拖鞋女鞋外穿2019新款绸缎面细跟凉拖鞋穆勒鞋</div>
-                                                <div className={Css['goods-row-text']}>品质精挑4折起</div>
-                                                <div className={Css['goods-row-img']}>
-                                                    <img src="//vueshop.glbuys.com/uploadfiles/1524556315.jpg" alt=""/></div>
-                                            </div>
 
                                         </div>
                                     </div>
@@ -173,7 +188,7 @@ export default class IndexComponent extends React.Component{
                                                     <div key={index2} className={Css['goods-List']}>
                                                         <div className={Css['title']}>{item2.title}</div>
                                                         <div className={Css['image']}>
-                                                            <img src={item2.image} alt={item2.title}/>
+                                                            <img src={require("../../../assets/images/common/lazyImg.jpg")} alt={item2.title} data-echo={item2.image}/>
                                                         </div>
                                                         <div className={Css['price']}>￥{item2.price}</div>
                                                         <div className={Css['unprice']}>￥{item2.price*2}</div>
@@ -201,7 +216,7 @@ export default class IndexComponent extends React.Component{
                                 return (
                                     <div key={index} className={Css['reco-item']}>
                                         <div className={Css['image']}>
-                                            <img src={item.image} alt=""/>
+                                            <img src={require("../../../assets/images/common/lazyImg.jpg")} alt={item.title} data-echo={item.image}/>
                                         </div>
                                         <div className={Css['title']}>{item.title}</div>
                                         <div className={Css['price']}>￥{item.price}</div>
